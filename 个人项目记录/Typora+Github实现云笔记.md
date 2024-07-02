@@ -13,3 +13,5 @@ Up的笔记地址
 
 
 ![image-20240702124230276](../assets/Typora+Github实现云笔记/image-20240702124230276.png)
+
+修改config文件后才能成功上传笔记
