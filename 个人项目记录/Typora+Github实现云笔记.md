@@ -14,7 +14,7 @@
 
 根据这个up提供的笔记完成全部设置后
 
-出现一下错误导致无法完成笔记上传
+出现以下的错误导致无法完成笔记上传
 
 ```
 ssh: connect to host github.com port 22: Connection refused
