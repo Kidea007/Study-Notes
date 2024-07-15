@@ -214,14 +214,16 @@ int main(int argc,char *argv[]){
         //fopen()函数返回NULL时打印错误信息
         //printf("Open file Failed\n");
         
-        perror("fopen"); //
+        perror("fopen"); //来自标准库，void perror(const char *s);先输出字符串s，再输出错误号对应的错误信息
+
         
-        printf("fopen:%s\n",strerror(errno));
+        printf("fopen:%s\n",strerror(errno)); // char *strerror(int errno);根据错误号返回对应的错误信息，函数来自：<errno.h>入口参数来自：<string.h>
+
     }
     else{
 	printf("Open file success\n");
-       // perror("open");
-       fpret = fclose(fp);
+       // perror("open");成功的分支打印错误信息没有意义
+       fpret = fclose(fp); //关闭文件
        if(fpret==0){
             printf("file close sucess\n");
        }else{
@@ -233,4 +235,43 @@ int main(int argc,char *argv[]){
 }
 
 ```
+
+## 关闭文件
+
+```c
+int fclose(FILE *stream)；
+//入口参数为，文件流指针
+//fclose()调用成功返回0，失败返回EOF，并设置errno
+
+```
+
+- 文件流关闭时自动刷新缓冲中的数据并释放缓冲区
+
+- 当一个程序正常终止时，所有打开的文件流都会被关闭。
+
+- 文件流一旦关闭后就不能执行任何操作
+- 没打开的文件不能关闭，否则报段错误
+- 程序能打开的文件数有限（1021 + stdin + stdout + stderr = 1024）
+
+# day02 标准IO的读写
+
+读写字符的API
+
+读写字符串的API
+
+
+
+输出-读取 Get
+
+- 读取文件中的字符或字符串
+- 读取键盘输入的字符或字符串
+
+输入-写入 Put
+
+- 将程序中的字符或字符串写入到文件
+- 将键盘输入的字符或字符串写到终端
+
+---
+
+文本文件只能存取ASCII码表中的字符（键盘上有的符号）
 
