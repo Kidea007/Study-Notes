@@ -176,7 +176,7 @@ zshell
 
 ## 01数据类型
 
-![image-20240616112236200](../AppData/Roaming/Typora/typora-user-images/image-20240616112236200.png)
+![image-20240713101531814](../assets/嵌入式Linux CC++笔记/image-20240713101531814.png)
 
 ### bool类型
 
@@ -196,11 +196,11 @@ bool = zero =false;
 
 下面是32bit的ubuntu下的数据长度
 
-![image-20240616114340320](../AppData/Roaming/Typora/typora-user-images/image-20240616114340320.png)
+![image-20240616114340320](../assets/嵌入式Linux CC++笔记/image-20240616114340320.png)
 
-![image-20240616114901604](../AppData/Roaming/Typora/typora-user-images/image-20240616114901604.png)
+![image-20240616114901604](../assets/嵌入式Linux CC++笔记/image-20240616114901604.png)
 
-![image-20240616114910197](../AppData/Roaming/Typora/typora-user-images/image-20240616114910197.png)
+![image-20240616114910197](../assets/嵌入式Linux CC++笔记/image-20240616114910197.png)
 
 对于不同硬件平台可以调用sizeof(datetype)查看不同数据类型的长度(不是变量)
 
@@ -208,9 +208,9 @@ bool = zero =false;
 
 数据范围溢出会乱码，但是编译器不一定会报错，需要人工检查
 
-![image-20240616115554108](../AppData/Roaming/Typora/typora-user-images/image-20240616115554108.png)
+![image-20240616115554108](../assets/嵌入式Linux CC++笔记/image-20240616115554108.png)
 
-![image-20240616115641086](../AppData/Roaming/Typora/typora-user-images/image-20240616115641086.png)
+![image-20240616115641086](../assets/嵌入式Linux CC++笔记/image-20240616115641086.png)
 
 ### 常量
 
@@ -254,7 +254,7 @@ static修饰的变量默认初始化为0，并且不入轮回（值不被销毁�
 
 按照小学数学来就行
 
-![image-20240616155454376](../AppData/Roaming/Typora/typora-user-images/image-20240616155454376.png)
+![image-20240616155454376](../assets/嵌入式Linux CC++笔记/image-20240616155454376.png)
 
 ### 关系运算符
 
@@ -262,11 +262,11 @@ static修饰的变量默认初始化为0，并且不入轮回（值不被销毁�
 
 可以在括号外加 ！取反
 
-![image-20240616154622623](../AppData/Roaming/Typora/typora-user-images/image-20240616154622623.png)
+![image-20240616154622623](../assets/嵌入式Linux CC++笔记/image-20240616154622623.png)
 
 ### ==逻辑运算符==
 
-![image-20240616154906737](../AppData/Roaming/Typora/typora-user-images/image-20240616154906737.png)
+![image-20240616154906737](../assets/嵌入式Linux CC++笔记/image-20240616154906737.png)
 
 逻辑与 相当于串联开关
 
@@ -278,7 +278,7 @@ static修饰的变量默认初始化为0，并且不入轮回（值不被销毁�
 
 在操作寄存器配置时经常用到位操作
 
-![image-20240616161609129](../AppData/Roaming/Typora/typora-user-images/image-20240616161609129.png)
+![image-20240616161609129](../assets/嵌入式Linux CC++笔记/image-20240616161609129.png)
 
 位逻辑反 ：在~后的二进制数每一位都分别取反
 
@@ -311,7 +311,7 @@ b=a<<3;//a转化为二进制：1110 0100
 
 将右边的表达式的运算结果赋值给左边的变量
 
-![image-20240616165235551](../AppData/Roaming/Typora/typora-user-images/image-20240616165235551.png)
+![image-20240616165235551](../assets/嵌入式Linux CC++笔记/image-20240616165235551.png)
 
 ---
 
@@ -325,13 +325,13 @@ if<表达式1>为真，则执行<表达式2>，else执行<表达式3>
 
 注意：只有表达式1是布尔型的判断
 
-![image-20240616170100989](../AppData/Roaming/Typora/typora-user-images/image-20240616170100989.png)
+![image-20240616170100989](../assets/嵌入式Linux CC++笔记/image-20240616170100989.png)
 
 ### 逗号运算符
 
 在括号内的表达式从左往右依次执行，将最右边的结果赋值给最左边的变量
 
-<img src="../AppData/Roaming/Typora/typora-user-images/image-20240616201857238.png" alt="image-20240616201857238" style="zoom:50%;" />
+<img src="../assets/嵌入式Linux CC++笔记/image-20240616201857238.png" alt="image-20240616201857238" style="zoom:50%;" />
 
 ### ==内存运算符号==
 
@@ -348,7 +348,7 @@ c = sizeof(a);//b=c,内存占用的大小和变量的值无关，只和数据类
 
 记不住的，用到再来查
 
-![image-20240616203223348](../AppData/Roaming/Typora/typora-user-images/image-20240616203223348.png)
+![image-20240616203223348](../assets/嵌入式Linux CC++笔记/image-20240616203223348.png)
 
 ## 03输入和输出函数
 
@@ -368,18 +368,18 @@ printf(" 被打印的变量是：%格式符1，%格式符2 "，变量名1，变�
 
 不同数据类型的变量打印需要不同的格式符
 
-<img src="../AppData/Roaming/Typora/typora-user-images/image-20240616205639231.png" alt="image-20240616205639231" style="zoom: 50%;" />
+<img src="../assets/嵌入式Linux CC++笔记/image-20240616205639231.png" alt="image-20240616205639231" style="zoom: 50%;" />
 
-![image-20240616210248669](../AppData/Roaming/Typora/typora-user-images/image-20240616210248669.png)
+![image-20240616210248669](../assets/嵌入式Linux CC++笔记/image-20240616210248669.png)
 
-![image-20240616210300084](../AppData/Roaming/Typora/typora-user-images/image-20240616210300084.png)
+![image-20240616210300084](../assets/嵌入式Linux CC++笔记/image-20240616210300084.png)
 
-![image-20240616210434410](../AppData/Roaming/Typora/typora-user-images/image-20240616210434410.png)
+![image-20240616210434410](../assets/嵌入式Linux CC++笔记/image-20240616210434410.png)
 
-<img src="../AppData/Roaming/Typora/typora-user-images/image-20240616210509771.png" alt="image-20240616210509771" style="zoom: 33%;" />
-
-
+<img src="../assets/嵌入式Linux CC++笔记/image-20240616210509771.png" alt="image-20240616210509771" style="zoom: 33%;" />
 
 
 
-![image-20240616214552947](../AppData/Roaming/Typora/typora-user-images/image-20240616214552947.png)
+
+
+![image-20240616214552947](../assets/嵌入式Linux CC++笔记/image-20240616214552947.png)
