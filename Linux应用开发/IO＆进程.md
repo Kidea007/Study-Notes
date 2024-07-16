@@ -271,7 +271,54 @@ int fclose(FILE *stream)；
 - 将程序中的字符或字符串写入到文件
 - 将键盘输入的字符或字符串写到终端
 
+
+
+普通文本文件的读写和二进制 文件读写的API不一样
+
 ---
 
 文本文件只能存取ASCII码表中的字符（键盘上有的符号）
 
+vim只能查看文本文件，查看二进制文件会乱码（显示成对应的ASCII或随机）
+
+- 二进制文件的读写
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc,char *argv[]){
+   FILE *fp;
+   char *buff;   
+   size_t ret;
+   fp=fopen("1.txt","r");
+   if(fp==NULL){
+      perror("fopen");
+      return 0;
+   }
+   
+   buff=(char*)malloc(100); //<stdlib.h>
+   if(buff==NULL){
+      return 0;
+
+   }
+
+   ret = fread(buff,10,1,fp);
+   if(ret==-1){
+       perror("fread");
+       goto end;
+   }
+   
+   printf("buf=%s\n",buff); 
+
+end:
+   free(buff);
+   fclose(fp);
+
+}
+
+```
+
+---
+
+[Readme2](../C&C++语言学习/Linux-C学习笔记.md)
