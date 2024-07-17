@@ -392,7 +392,7 @@ printf(" 被打印的变量是：%格式符1，%格式符2 "，变量名1，变�
 
 
 
-# day10 软件包管理及shell命令
+# day10 软件包管理及shell
 
 ```shell
 打开终端Terminal快捷键   
@@ -557,10 +557,159 @@ apt-cache  subcommands  [ -p | -s | - q | - i | - c | -h ]  pkg
 
 ## Shell命令
 
-**shell****简介**
+**shell简介：**
 
 - **命令**是用户向系统内核发出控制请求，与之交互的文本流。
 
 - shell是一个命令行解释器，将用户命令解析为操作系统所能理解的指令，实现用户与操作系统的交互。
 
-- 当需要重复执行若干命令，可以将这些命令集合起来，加入一定的控制语句，编辑成为**shell****脚本**文件，交给shell批量执行。 
+- 当需要重复执行若干命令，可以将这些命令集合起来，加入一定的控制语句，编辑成为**shell脚本**文件，交给shell批量执行。 
+
+## 各种shell
+
+**目前流行的shell主要有几种 :**
+
+- **Bourne Shell**（简称**sh**）：它是Unix的第一个shell程序，早已成为工业标准。目前**几乎所有的Linux**系统都支持它。不过Bourne Shell的作业控制功能薄弱，且不支持别名与历史记录等功能。
+
+- **C Shell**（简称**csh**）
+
+- **KornShell**（简称**ksh**）
+
+- **Bourne Again Shell**：能够提供环境变量以配置用户Shell环境，支持历史记录，内置算术功能，支持通配符表达式，将常用命令内置简化。
+
+## bash shell的基本格式
+
+```shell
+username@hostname:direction$ Command [-Options] Argument1 Argument2 …
+
+username：用户名，显示当前登录用户的账户名；
+hostname：主机名，显示登录的主机名，例如若远程登录后，则显示登录的主机名；
+direction：目录名，显示当前所处的路径，当在根目录下显示为“/”，当在用户主目录下显示为“~”；
+
+$：       Shell提示符，如果当前用户为超级用户，提示符为“#”，其他用户的提示符均为“$”；
+
+Command： 命令名称，Shell命令或程序，严格区分大小写
+Options： 命令选项，用于改变命令执行动作的类型，由“-”引导，可以同时带有多个选项；
+Argument：命令参数，指出命令作用的对象或目标，有的命令允许带多个参数。
+```
+
+- 一条命令的三要素之间用空格隔开；
+- 若将多个命令在一行书写，用分号（;）将各命令隔开；
+- 如果一条命令不能在一行写完，在行尾使用反斜杠（\）标明该条命令未结束。
+- 命令不带选项或参数，意为使用默认选项或参数。
+
+- 输入命令或文件名的前几个字符后，连续==按两下TAB键或ESC==键，用于==命令==补全；
+- 按下==一次TAB键==，用于==文件名==补全。 
+- 按上下键，可以切换命令的历史记录，默认保留500条命令。
+- 使用命令**history** [numberline] 可以将命令历史记录按==列表显示==
+
+## 关机与重启
+
+```shell
+立即关机
+kidea@ubuntu:~$ sudo  shutdown  -h  now
+立即重启
+kidea@ubuntu :~$ sudo  shutdown  -r  now
+立即重启
+kidea@ubuntu :~$ sudo  reboot   now
+定时45分钟关机
+kidea@ubuntu:~$ sudo  shutdown  -h  +45   “That is all, game over.”
+定时60分钟重启
+kidea@ubuntu:~$ sudo  shutdown  -r  +60
+```
+
+## 查询shell的官方文档
+
+```shell
+如下，查询ls命令的帮助文档
+man ls
+```
+
+## shell的通配符
+
+**批量处理具有类似名称的文件**
+
+| 通配符       | 含义                         | 实例                                                         |
+| ------------ | ---------------------------- | ------------------------------------------------------------ |
+| 星号 `*`     | 匹配任意长度的字符串         | 用`file_*.txt`，匹配file_wang.txt、file_Lee.txt、file3_Liu.txt |
+| 问号 `?`     | 匹配一个长度的字符           | 用`flie_?.txt`，匹配file_1.txt、file1_2.txt、file_3.txt      |
+| 方括号`[…]`  | 匹配其中指定的一个字符       | 用`file_[otr].txt`，匹配file_o.txt、file_r.txt和file_t.txt   |
+| 方括号`[-]`  | 匹配指定的一个字符范围       | 用`file_[a-z].txt`，匹配file_a.txt、file_b.txt，直到file_z.txt |
+| 方括号`[^…]` | 除了其中指定的字符，均可匹配 | 用`file_[^otr].txt`，除了file_o.txt、file_r.txt和file_t.txt的其他文件 |
+
+
+```shell
+示例操作：
+
+linux@ubuntu:~/mywork$ ls  file_*.txt
+file_liu.txt   file_wang.txt   file_lee.txt   file_song.txt
+
+linux@ubuntu:~/mywork$ ls  file_?.txt
+file_1.txt   file_2.txt   file_3.txt   file_4.txt   file_5.txt
+
+linux@ubuntu:~/mywork$ ls   file_[1-5].txt
+file_1.txt   file_2.txt   file_3.txt   file_4.txt   file_5.txt
+
+linuxx@ubuntu:~/mywork$ ls   file_[^245].txt
+file_1.txt   file_3.txt
+```
+
+## shell的管道
+
+**一次性执行一串命令 **即上一个命令的输出传递给下一个命令的输入，相当于通过使用“|”符连成了一个命令管道。
+
+```shell
+linux@ubuntu:~$ ls  /usr/bin  | wc  –w
+1249
+```
+
+例如上述操作中，借助管道“|”，将ls的输出直接作为wc命令的输入，得到的是/usr/bin目录下文件的个数为1249。
+
+---
+
+## 输入/输出重定向
+
+- 输入/输出重定向是==改变==**shell命令或程序**默认的==标准输入/输出目标==，重新定向到新的目标文件。
+
+- linux中默认的标准输入定义为==键盘==，标准输出定义为==终端==窗口。
+
+- 用户可以为当前操作==重定向==输入或输出，迫使某个特定命令的输入或输出来源为==外部文件==。
+
+| 重定向符 | 含义                               | 实例                                                         |
+| -------- | ---------------------------------- | ------------------------------------------------------------ |
+| >  file  | 将file文件重定向为输出源，新建模式 | ls  /usr > Lsoutput.txt，将ls /usr的执行结果，写到Lsoutput.txt文件中，若有同名文件将被删除 |
+| >> file  | 将file文件重定向为输出源，追加模式 | ls  /usr >> Lsoutput.txt，将ls /usr的执行结果，追加到Lsoutput.txt文件已有内容后 |
+| <  file  | 将file文件重定向为输入源           | wc  < file1，将file1中的内容作为输入传给wc命令               |
+| 2>或&>   | 将由命令产生的错误信息输入到文件中 | ls  noexistingfile.txt 2> err.log，使用ls命令，查看一个不存在的文件时，将系统错误提示保存在err.log文件中 |
+
+```shell
+#cat命令 功能为:在标准输出上显示文件
+linux@ubuntu:~/mywork$ cat            #使用标准输入/出设备
+have a good day!                #用户使用标准输入设备——键盘，键入字符串，并按Enter键
+have a good day!                #系统在标准输出——显示器上，显示用户刚刚输入的字符串
+
+linux@ubuntu:~/mywork$ cat > file1.txt    #输出重定向，将输出定向到文件file1.txt
+have a good day!               #用户使用标准输入设备——键盘，键入字符串，并按Enter键
+                                              #用户输入的字符串被保存在file1.txt文件中
+linux@ubuntu:~/mywork$ cat < file1.txt    #输入重定向，将cat命令的输入指定为file1.txt文件
+have a good day!                #系统在标准输出显示器上，显示cat命令从文件中读出的字符串
+```
+
+## 命令置换
+
+- 命令替换是将一个命令的输出作为另一个命令的参数。
+
+```shell
+# 基本格式  command1  `command2`
+#其中，命令command2的输出将作为命令command1的参数。
+#需要注意，命令置换的单引号为ESC键下方的“`”键 
+
+linux@ubuntu:~$ ls  `pwd`
+Desktop  Examples  historycommandlist  mywork
+
+#pwd命令用于显示当前目录的绝对路径。
+#在上面的命令行中，使用命令置换符，将pwd的运行结果作为ls命令的参数。
+#最终，命令执行结果是显示当前目录的文件内容。
+```
+
+# day11 shell系统维护命令
