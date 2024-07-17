@@ -2,6 +2,8 @@
 
 form：华清远见
 
+开发普通：Ubuntu  编译器：gcc  编辑器：Vim
+
 ---
 
 
@@ -158,7 +160,7 @@ zshell
 
 
 
-# 标准IO
+## 标准IO
 
 控制高端的硬件必须通过操作系统内核来实现
 
@@ -171,6 +173,8 @@ zshell
 标准IO方便了程序在不同操作系统间的移植
 
 ---
+
+
 
 # C语言
 
@@ -383,3 +387,106 @@ printf(" 被打印的变量是：%格式符1，%格式符2 "，变量名1，变�
 
 
 ![image-20240616214552947](../assets/嵌入式Linux CC++笔记/image-20240616214552947.png)
+
+
+
+
+
+# day10 软件包管理及shell命令
+
+```shell
+打开终端Terminal快捷键   
+
+Ctrl+Alt+t
+```
+
+Linux大概的体系结构
+
+![image-20240716201052114](../assets/Linux-C学习笔记/image-20240716201052114.png)
+
+
+
+### 软件包的类型
+
+- **Binary Packages**（二进制软件包）：它包含可执行文件、==库文件==、配置文件、man/info页面、版权声明和其它文档。
+
+- **Source Packages**（源码包）：包含软件源代码、版本修改说明、构建指令以及==编译工具==等。==先由tar工具归档为.tar.gz文件，然后再打包成.dsc文件==。
+
+```shell
+软件包类型的查询命令 file
+
+kidea@Linux:~$ file  g++_4.1.2-9ubuntu2_i386.deb
+g++_4.1.2-9ubuntu2_i386: Debian binary package (format 2.0)
+```
+
+### 软件包命名规范
+
+```she
+Filename_Version-Reversion_Architecture.deb
+软件包名称_软件版本-修订版本_系统内核架构.deb
+
+
+```
+
+### dpkg软件包管理器
+
+> 所有源自“Debian”的“Linux”发行版都使用dpkg，例如Ubuntu、Knoppix等。
+
+1. **功能**：dpkg主要用于==本地软件包==的管理。它侧重于安装、卸载和提供.deb软件包相关的信息。
+
+2. 常用命令
+
+   - 安装本地存在的软件：`dpkg -i <package_name>.deb`
+
+   - 列出已安装的包列表：`dpkg -l`
+
+   - 查看包的安装路径：`dpkg -L <package_name>`
+
+   - 查看包是否安装：`dpkg -s <package_name>` 或 `dpkg --status <package_name>`
+
+   - 查找指定文件所属的包名：`dpkg -S <file_name>` 或 `dpkg --search <file_name>`
+
+   - `dpkg -r <package> ` 移除一个已经安装的软件包
+
+   - `dpkg -P <package>`  移除已安装软件包及配置文件
+
+     
+
+### 软件包管理工具APT
+
+> ATP软件包管理器的作用
+>
+> - **检查和修复软件包依赖关系**
+> - **利用Internet网络帮助用户主动获取软件包**
+
+> apt是基于dpkg的软件包管理工具，可以理解为dpkg的“前端”或“升级版”。apt不仅提供了与dpkg类似的软件包管理功能，还增加了远程包的下载和依赖管理。
+
+1. **功能**：apt会解决和安装模块的依赖问题，并会咨询软件仓库。它侧重于远程包的下载和依赖管理，使得用户可以更方便地安装、更新和卸载软件包。
+2. ==常用命令：==
+   - 更新包信息：`sudo apt update`
+   - 升级包：`sudo apt upgrade`
+   - 安装包：`sudo apt install <package_name>`
+   - 删除不再需要的依赖包：`sudo apt autoremove`
+
+> 
+>
+> Ubuntu的软件源配置文件路径为`/etc/apt/sources.list` 
+
+- 软件源配置文件只是告知Ubuntu系统可以访问的==镜像站点(服务器)地址==。
+
+- 镜像站点没有软件资源的列表。
+- APT为这些软件资源建立了索引文件，以便本地主机查询。
+
+- 把==sources.list==内的镜像源换为国内源可以提高访问速度
+
+### 软件源
+
+>  根据软件包的开发组织对该软件的支持程度，以及遵从的开源程度，划分为如下四类：
+
+- **核心（Main）**：官方维护的开源软件，是由Ubuntu官方完全支持的软件，包括大多数流行的、稳定的开源软件，是Ubuntu默认安装的基本软件包；
+
+- **公共（Universe）**：社区维护的开源软件，是由Ubuntu社区的计算机爱好者维护的软件。这些软件包没有安全升级的保障。用户在使用时，需要考虑这些软件包存在的不稳定性；
+
+- **受限（Restricted）**：官方维护的非开源软件，是专供特殊用途，而且没有自由软件版权，不能直接修改软件，但依然被Ubuntu团队支持的软件；
+
+- **多元化（Multiverse）**：非Ubuntu官方维护的非开源软件，用户使用这些软件包时，需要特别注意版权问题。

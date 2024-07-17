@@ -296,7 +296,7 @@ int main(int argc,char *argv[]){
       perror("fopen");
       return 0;
    }
-   
+   //这里的动态内存申请是被强制转换为字符指针类型？
    buff=(char*)malloc(100); //<stdlib.h>
    if(buff==NULL){
       return 0;
@@ -321,4 +321,11 @@ end:
 
 ---
 
-[Readme2](../C&C++语言学习/Linux-C学习笔记.md)
+文件写完后，不可以马上读取，可以关闭文件，再打开后读取
+
+因为文件写完后文件指针指向的是文件的结尾，重新打开后指向文件开头
+
+---
+
+# day03 流刷新定位、格式化输入输出
+
