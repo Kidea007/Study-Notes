@@ -641,13 +641,13 @@ man ls
 ```shell
 示例操作：
 
-linux@ubuntu:~/mywork$ ls  file_*.txt
+kidea@ubuntu:~/mywork$ ls  file_*.txt
 file_liu.txt   file_wang.txt   file_lee.txt   file_song.txt
 
-linux@ubuntu:~/mywork$ ls  file_?.txt
+kidea@ubuntu:~/mywork$ ls  file_?.txt
 file_1.txt   file_2.txt   file_3.txt   file_4.txt   file_5.txt
 
-linux@ubuntu:~/mywork$ ls   file_[1-5].txt
+kidea@ubuntu:~/mywork$ ls   file_[1-5].txt
 file_1.txt   file_2.txt   file_3.txt   file_4.txt   file_5.txt
 
 linuxx@ubuntu:~/mywork$ ls   file_[^245].txt
@@ -659,7 +659,7 @@ file_1.txt   file_3.txt
 **一次性执行一串命令 **即上一个命令的输出传递给下一个命令的输入，相当于通过使用“|”符连成了一个命令管道。
 
 ```shell
-linux@ubuntu:~$ ls  /usr/bin  | wc  –w
+kidea@ubuntu:~$ ls  /usr/bin  | wc  –w
 1249
 ```
 
@@ -684,14 +684,14 @@ linux@ubuntu:~$ ls  /usr/bin  | wc  –w
 
 ```shell
 #cat命令 功能为:在标准输出上显示文件
-linux@ubuntu:~/mywork$ cat            #使用标准输入/出设备
+kidea@ubuntu:~/mywork$ cat            #使用标准输入/出设备
 have a good day!                #用户使用标准输入设备——键盘，键入字符串，并按Enter键
 have a good day!                #系统在标准输出——显示器上，显示用户刚刚输入的字符串
 
-linux@ubuntu:~/mywork$ cat > file1.txt    #输出重定向，将输出定向到文件file1.txt
+kidea@ubuntu:~/mywork$ cat > file1.txt    #输出重定向，将输出定向到文件file1.txt
 have a good day!               #用户使用标准输入设备——键盘，键入字符串，并按Enter键
                                               #用户输入的字符串被保存在file1.txt文件中
-linux@ubuntu:~/mywork$ cat < file1.txt    #输入重定向，将cat命令的输入指定为file1.txt文件
+kidea@ubuntu:~/mywork$ cat < file1.txt    #输入重定向，将cat命令的输入指定为file1.txt文件
 have a good day!                #系统在标准输出显示器上，显示cat命令从文件中读出的字符串
 ```
 
@@ -704,7 +704,7 @@ have a good day!                #系统在标准输出显示器上，显示cat�
 #其中，命令command2的输出将作为命令command1的参数。
 #需要注意，命令置换的单引号为ESC键下方的“`”键 
 
-linux@ubuntu:~$ ls  `pwd`
+kidea@ubuntu:~$ ls  `pwd`
 Desktop  Examples  historycommandlist  mywork
 
 #pwd命令用于显示当前目录的绝对路径。
@@ -713,3 +713,144 @@ Desktop  Examples  historycommandlist  mywork
 ```
 
 # day11 shell系统维护命令
+
+## 帮助文档-man
+
+- 学习shell新命令最高效的方法是使用命令==man==获取帮助文档
+
+```shell
+kidea@ubuntu:~$ man commandname
+#commandname是要查询的命令的名称，包括：名称、函数、语法以及可选参数描述等
+#帮助页面使用PageUp和PageDown键翻页，使用“：q”退出帮助页面
+```
+
+```shell
+#帮助页面的基本信息框架
+NAME：命令的名称
+SYNOPSIS：命令的语法格式
+DESCRIPTION：命令的一般描述以及用途
+OPTIONS：描述命令所有的参数或选项
+SEE ALSO：列出帮助页面中与该命令直接相关或功能相近的其他命令
+BUGS：解释命令或其输出中存在的任何已知的问题或缺陷
+EXAMPLES：普通的用法示例
+AUTHORS：帮助页面以及命令的作者
+```
+
+## 修改密码-passwd
+
+- passwd命令，为已有账户重新修改用户密码
+
+```shell
+kidea@ubuntu:~$ passwd  username
+#超级用户root可以修改所有其他用户的密码，而普通用户只能修改自己的用户密码
+```
+
+```shell
+kidea@ubuntu:~$ passwd
+Changing password for kidea      #修改当前用户密码
+(current) UNIX password:        #用户输入旧密码
+Enter new UNIX password:       #用户输入新密码
+Retype new UNIX password:      #确认新密码
+passwd：已成功更新密码
+```
+
+## 改变身份-su
+
+- su命令用于临时改变用户身份
+
+```shell
+kidea@ubuntu:~$ su  [-c | -m - ]  username
+#选项“-c”表示执行一个命令后就结束
+#选项-m表示仍保留环境变量不变
+#选项-表示转换用户身份时，同时使用该用户的环境。
+#当需要放弃当前用户身份，可以使用exit命令切换回来
+```
+
+```shell
+kidea@ubuntu:~$ su
+#单独使用su命令，默认为要转换为超级用户root
+Password:     #当前用户输入超级用户的密码
+root@ubuntu:/home/linux#
+
+```
+
+## 标准输出-echo
+
+- echo命令用于在标准输出——显示器上显示一段文字，一般起到提示作用
+
+```shell
+kidea@ubuntu:~$ echo  [-n]  information
+#选项-n表示输出文字后不换行。提示信息字符串information可以加引号，也可以不加。
+
+```
+
+```shell
+kidea@ubuntu:~$ echo   "Hello kidea"    #输入信息字符串使用引号
+Hello kidea
+kidea@ubuntu:~$ echo   ‘$PATH’    #严格的原样输出
+$PATH.
+kidea@ubuntu:~$ echo    Hello kidea.         
+Hello kidea.
+#输入信息字符串不使用引号,字符串之间用一个空格隔开
+
+kidea@ubuntu:~$ echo $PATh #打印huan'j
+```
+
+## 系统时间-date
+
+- date命令用于显示和设置系统日期和时间
+
+```shell
+kidea@ubuntu:~$ date  [-d | -s|-u ]  datestr
+#选项-s表示按照datestr日期显示格式设置日期
+#单独使用date命令，用于显示系统时钟中当前日期
+
+```
+
+```shell
+kidea@ubuntu:~$ date            #查看当前时间
+2024年 09月 16日 星期日 18:44:45 CST
+kidea@ubuntu:~$ sudo  date  -s  1:19:18   #设置新时间，需要系统管理员权限
+Password:
+2024年 09月 16日 星期日 01:19:18 CST
+```
+
+## 清除屏幕-clear
+
+```shell
+kidea@ubuntu:~$ clear
+#清除终端的全部字符
+```
+
+## 磁盘空间-df
+
+- df命令用于查看磁盘空间的使用情况。
+
+```shell
+kidea@ubuntu:~$ df  [-a | -T | -h | -k ]  Filesystem
+#参数Filesystem表示物理文件系统
+```
+
+| 选项 | 含义                                                         |
+| ---- | ------------------------------------------------------------ |
+| -a   | 显示所有物理文件系统的使用情况，包括虚拟文件系统，如/proc、/sys等 |
+| -T   | 显示物理文件系统的文件格式类型                               |
+| -h   | 物理文件系统大小按兆字节为单位显示                           |
+| -k   | 物理文件系统大小按千字节为单位显示                           |
+| -l   | 仅列出本地文件系统                                           |
+
+```shell
+kidea@ubuntu:~$ df –T
+文件系统      类型         1K-块     已用       可用     已用%     挂载点
+/dev/sda1    ext3      7850996   2664868  4787316   36%    /
+varrun       tmpfs     255960    104      255856     1%     /var/run
+varlock      tmpfs     255960     0       255960     0%     /var/lock
+procbususb   usbfs     255960     84      255876     1%     /proc/bus/usb
+udev         tmpfs     255960     84      255876     1%     /dev
+devshm       tmpfs     255960      0      255960     0%     /dev/shm
+lrm          tmpfs     255960    33788    222172     14%     /lib/modules/2.6.20-16-generic/volatile
+/dev/hdc    iso9660   712946   712946          0    100%    /media/cdrom0
+/dev/sdb1     vfat    249582    211602     37980     85%     /media/disk
+#这台计算机只有一块硬盘（/dev/sda1），文件格式类型为Ext3，已经使用36%的存储空间。同时，可以发现计算机上还安装了CD-ROM（/dev/hdc）、USB存储器（/dev/sdb1）。其他分区均为专用的虚拟文件系统
+```
+
