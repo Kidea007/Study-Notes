@@ -714,7 +714,9 @@ Desktop  Examples  historycommandlist  mywork
 
 # day11 shell系统维护命令
 
-## 帮助文档-man
+## 系统维护基本命令
+
+### 帮助文档-man
 
 - 学习shell新命令最高效的方法是使用命令==man==获取帮助文档
 
@@ -736,7 +738,7 @@ EXAMPLES：普通的用法示例
 AUTHORS：帮助页面以及命令的作者
 ```
 
-## 修改密码-passwd
+### 修改密码-passwd
 
 - passwd命令，为已有账户重新修改用户密码
 
@@ -754,7 +756,7 @@ Retype new UNIX password:      #确认新密码
 passwd：已成功更新密码
 ```
 
-## 改变身份-su
+### 改变身份-su
 
 - su命令用于临时改变用户身份
 
@@ -774,7 +776,7 @@ root@ubuntu:/home/linux#
 
 ```
 
-## 标准输出-echo
+标准输出-echo
 
 - echo命令用于在标准输出——显示器上显示一段文字，一般起到提示作用
 
@@ -796,7 +798,7 @@ Hello kidea.
 kidea@ubuntu:~$ echo $PATh #打印环境变量
 ```
 
-## 系统时间-date
+### 系统时间-date
 
 - date命令用于显示和设置系统日期和时间
 
@@ -815,14 +817,14 @@ Password:
 2024年 09月 16日 星期日 01:19:18 CST
 ```
 
-## 清除屏幕-clear
+### 清除屏幕-clear
 
 ```shell
 kidea@ubuntu:~$ clear
 #清除终端的全部字符
 ```
 
-## 磁盘空间-df
+### 磁盘空间-df
 
 - df命令用于查看磁盘空间的使用情况。
 
@@ -854,3 +856,52 @@ lrm          tmpfs     255960    33788    222172     14%     /lib/modules/2.6.20
 #这台计算机只有一块硬盘（/dev/sda1），文件格式类型为Ext3，已经使用36%的存储空间。同时，可以发现计算机上还安装了CD-ROM（/dev/hdc）、USB存储器（/dev/sdb1）。其他分区均为专用的虚拟文件系统
 ```
 
+## 用户管理
+
+### 用户的基本属性
+
+- 用户名
+
+- 密码
+
+- 用户ID（**UID**）
+
+- 用户主目录（**HOME**）
+
+- 用户**shell**
+
+### /etc/passwd文件
+
+```shell
+kidea@ubuntu:~$ vim /etc/passwd
+```
+
+> 是系统能够识别的用户清单。用户登陆时，系统查询这个文件，确定用户的UID并验证用户口令
+
+- 登陆名
+
+- 经过加密的口令
+
+- UID
+
+- 默认的组ID （GID）
+
+- 个人信息
+
+- 主目录
+
+- 登陆shell
+
+### /etc/group文件
+
+> 包含了UNIX组的名称和每个组中成员列表，每一行代表一个组，包括4个字段：
+
+- 组名
+
+- 加密的口令
+
+- GID号
+
+- 成员列表，彼此用逗号隔开
+
+![image-20240718213107015](../assets/Linux-C学习笔记/image-20240718213107015.png)
