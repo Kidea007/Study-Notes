@@ -793,7 +793,7 @@ kidea@ubuntu:~$ echo    Hello kidea.
 Hello kidea.
 #输入信息字符串不使用引号,字符串之间用一个空格隔开
 
-kidea@ubuntu:~$ echo $PATh #打印huan'j
+kidea@ubuntu:~$ echo $PATh #打印环境变量
 ```
 
 ## 系统时间-date
