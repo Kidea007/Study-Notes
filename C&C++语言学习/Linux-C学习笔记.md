@@ -1,8 +1,8 @@
-# 嵌入式Linux C/C++笔记
+# 嵌入式Linux 软件笔记
 
 form：华清远见
 
-开发普通：Ubuntu  编译器：gcc  编辑器：Vim
+开发平台：Ubuntu  编译器：gcc  编辑器：Vim
 
 ---
 
@@ -856,7 +856,7 @@ lrm          tmpfs     255960    33788    222172     14%     /lib/modules/2.6.20
 #这台计算机只有一块硬盘（/dev/sda1），文件格式类型为Ext3，已经使用36%的存储空间。同时，可以发现计算机上还安装了CD-ROM（/dev/hdc）、USB存储器（/dev/sdb1）。其他分区均为专用的虚拟文件系统
 ```
 
-## 用户管理
+## 用户管理命令
 
 ### 用户的基本属性
 
@@ -870,7 +870,7 @@ lrm          tmpfs     255960    33788    222172     14%     /lib/modules/2.6.20
 
 - 用户**shell**
 
-### /etc/passwd文件
+### /etc/passwd所有用户文件
 
 ```shell
 kidea@ubuntu:~$ vim /etc/passwd
@@ -880,7 +880,7 @@ kidea@ubuntu:~$ vim /etc/passwd
 
 - 登陆名
 
-- 经过加密的口令
+- 经过加密的密码
 
 - UID
 
@@ -892,16 +892,303 @@ kidea@ubuntu:~$ vim /etc/passwd
 
 - 登陆shell
 
-### /etc/group文件
+### /etc/group组用户文件
 
 > 包含了UNIX组的名称和每个组中成员列表，每一行代表一个组，包括4个字段：
 
 - 组名
 
-- 加密的口令
+- 加密的密码
 
 - GID号
 
 - 成员列表，彼此用逗号隔开
 
-![image-20240718213107015](../assets/Linux-C学习笔记/image-20240718213107015.png)
+### 添加用户-adduser
+
+```shell
+kidea@ubuntu:~$ adduser username
+#创建新用户后，需要输入用户的属性
+```
+
+### 用户配置 /etc/adduser.conf 
+
+```shell
+FIRST_UID=1000
+LAST_UID=29999
+USERS_GID=100
+DHOME=/home
+DSHELL=/bin/bash
+SKEL=/etc/skel
+```
+
+### SKEL文件模板
+
+- /etc/skel文件是被 /usr/sbin/useradd调用的
+
+```shell
+#新用户拥有的配置文件从/etc/skel目录拷贝，常用的文件： 
+.bash_profile
+.bashrc
+.bash_logout
+ dircolors
+.inputrc
+.vimrc  
+```
+
+### 添加用户步骤
+
+**系统自动配置**
+
+- 编辑passwd和shadow文件，定义用户帐号
+
+- 设置一个初始口令
+
+- 创建用户主目录，用chown和chmod命令改变主目录的属主和属性
+
+**用户配置**
+
+- 将默认的启动文件复制到用户主目录中
+
+- 设置用户的邮件主目录并建立邮件别名
+
+``` shell
+#修改用户密码
+kidea@ubuntu:~$ sudo passwd  [-k] [-l] [u] [-f] [-d] [-S]  username
+```
+
+```shell
+#修改用户属性
+kidea@ubuntu:~$ usermod [-u uid [-o]] [-g group] [-G gropup,…]
+						[-d home [-m]] [-s shell] [-c comment]
+						[-l new_name] [-f inactive][-e expire]
+						[-p passwd] [-L|-U] name
+#用户oldname改名为newname，注意要同时更改家目录： 
+kidea@ubuntu:~$ sudo usermod  –d  /home/newname  –m    –l  newname  oldname
+
+```
+
+```shell
+#删除用户
+kidea@ubuntu:~$ deluser  <username>
+#举例删除用户xiaoming的同时删除用户的工作目录 
+kidea@ubuntu:~$ deluser  --remove-home  xiaoming
+```
+
+```shell
+#添加用户组
+kidea@ubuntu:~$ addgroup  groupname
+#删除用户组
+kidea@ubuntu:~$ delgroup  groupname
+```
+
+## 进程管理命令
+
+```shell
+#显示进程 (process) 的动态
+kidea@ubuntu:~$ ps [-options]
+                    -A 列出所有的行程 
+                    -w 显示加宽可以显示较多的资讯 
+                    -au 显示较详细的资讯 
+                    -aux 显示所有包含其他使用者的行程 
+```
+
+```shell
+#进程状态的一些标识符
+D:  	不可中断的静止        
+R:  	正在执行中 
+S:  	阻塞状态 
+T:  	暂停执行 
+Z:  	不存在但暂时无法消除 
+<:  	高优先级的进程 
+N:  	低优先级的进程 
+L:  	有内存分页分配并锁在内存中
+```
+
+```shell
+#实时监视所有进程的CPU和内存等资源占用的情况
+kidea@ubuntu:~$ top
+#按q退出
+```
+
+```shell
+#将所有行程以树状图显示
+kidea@ubuntu:~$ pstree  -option
+                        -a 显示该进程的完整指令及参数, 如果是被内存置换出去的进程则会加上括号
+                        -c 如果有重覆的进程名, 则分开列出
+```
+
+```shell
+#kill命令向指定的进程发出一个信号signal序号，在默认的情况下，kill命令向指定进程发出信号序号15，正常情况下，将杀死那些不捕捉或不忽略这个信号的进程
+kidea@ubuntu:~$ kill -signal PID 
+```
+
+## linux文件系统
+
+> 文件系统
+>
+> - 用于组织和管理计算机存储设备上的大量文件
+> - 并提供用户交互接口
+
+Linux的文件系统管理工具：
+
+- Nautilus图形文件管理器
+
+- shell文件系统管理工具
+
+### 文件系统格式
+
+> **磁盘文件系统**：指本地主机中实际可以访问到的文件系统，包括硬盘、CD-ROM、DVD、USB存储器、磁盘阵列等。常见文件系统格式有：autofs、coda、Ext（Extended File sytem，扩展文件系统）、Ext3、Ext4、VFAT、ISO9660（通常是CD-ROM）、UFS（Unix File System，Unix文件系统）、FAT、FAT16、FAT32、NTFS等；
+
+> **网络文件系统**：是可以远程访问的文件系统，这种文件系统在服务器端仍是本地的磁盘文件系统，客户机通过网络远程访问数据。常见文件系统格式有：NFS、Samba等
+
+> **专有/虚拟文件系统**：不驻留在磁盘上的文件系统。常见格式有：TMPFS（临时文件系统）、PROCFS（Process File System，进程文件系统）和LOOPBACKFS（Loopback File System，回送文件系统）
+
+> 目前**Ext4**是Linux系统广泛使用的一种文件格式。在Ext3基础上，对有效性保护、数据完整性、数据访问速度、向下兼容性等方面做了改进。
+>
+> 最大特点是日志文件系统：可将整个磁盘的写入动作完整地记录在磁盘的某个区域上，以便在必要时回溯追踪。
+
+### 硬盘分区
+
+```shell
+kidea@ubuntu:~$ cd /dev/
+#所有设备的文件在这个文件夹下/dev/
+#SCSI或sata硬盘的设备名称/dev/sda1 其中 sd表示sata硬盘 a表示硬盘序号 1表示该硬盘分区的序号
+# IDE硬盘的设备名称/dev/hdc2 其中 hd表示 IDE硬盘 c表示硬盘序号 2表示该硬盘分区的序号
+```
+
+```shell
+#查看硬盘的详细信息
+kidea@ubuntu:~$ cat /proc/partitions
+```
+
+### 交换分区
+
+> 将内存中的内容写入硬盘或从硬盘中读出，称为**内存交换（swapping）**
+
+- 交换分区必须大于等于计算机的内存
+
+- 可以创建多个的交换分区
+
+- 尽量把交换分区放在硬盘驱动器的==起始位置==
+
+### 文件系统结构
+
+> **在Windows下，目录结构属于分区；在Linux下，分区属于目录结构。**
+>
+> 说人话大概是windows可以有很多根目录，而Linux只有一个根目录
+
+> - 在Linux中，将==所有硬件都视为文件==来处理，包括硬盘分区、CD-ROM、软驱以及其他USB移动设备等。
+> - 为了能够按照统一的方式和方法访问文件资源，Linux中提供了对每种硬件设备相应的设备文件。
+> - 一旦Linux系统可以访问到硬件，就将其上的文件系统==挂载==到目录树中的一个子目录中。
+>
+> - 例如，用户插入U盘，Linux自动识别后，将其==挂载==到`/media/disk`目录下。
+> - 而Windows系统则将U盘作为新驱动器，表示为 `F: 盘`。
+
+#### Linux的文件 tree
+
+<img src="../assets/Linux-C学习笔记/image-20240719152754015.png" alt="image-20240719152754015" style="zoom: 67%;" />
+
+####  **FHS，File Hierarchy Standard**（文件层次结构标准）
+
+>
+> 2004年发行版本FHS 2.3。所有Linux系统都遵循这个标准来规范**文件目录命名和存放标准**
+>
+> Ubuntu Linux系统同样也遵循这个标准。 
+
+| **目录名**      | **描述**                                                     |
+| --------------- | ------------------------------------------------------------ |
+| **/**           | Linux文件系统**根目录**                                      |
+| **/bin**        | 存放系统中最常用的**可执行文件**（二进制文件）               |
+| **/boot**       | 存放**Linux内核**和**系统启动**文件，包括Grub、lilo启动器程序 |
+| **/dev**        | 存放**所有设备文件**，包括硬盘、分区、键盘、鼠标、USB、tty等 |
+| **/etc**        | 存放系统的**所有配置文件**，例如==passwd==存放用户账户信息，hostname存放主机名等 |
+| **/home**       | ==用户主目录==的默认位置                                     |
+| **/initrd**     | 存放启动时挂载**initrd.img** 镜像文件的目录，以及载入所需**设备模块**的目录。 |
+| **/lib**        | 存放**共享的库文件**，包含许多==被**/bin和/sbin**中程序使用的库文件== |
+| **/lost+found** | 存放由fsck放置的零散文件                                     |
+| **/media**      | Ubuntu系统自动挂载CD-ROM、软驱、USB存储器后，存放**临时读入的文件** |
+| **/mnt**        | 该目录通常用于作为**被挂载**的文件系统的**挂载点**           |
+| **/opt**        | 主要被**第三方开发者**用来简易地安装和卸装他们的**软件包**作为可选文件和程序的存放目录 |
+| **/proc**       | 存放所有标志为文件的**进程**，它们是通过**进程号**或其他的系统动态信息进行标识，例如cpuinfo文件存放CPU当前工作状态的数据 |
+| **/root**       | **root用户**的主目录                                         |
+| **/sbin**       | 存放更多的**可执行文件**（二进制文件），包括系统管理、目录查询等关键命令文件 |
+| **/srv**        | 服务目录，存放**本地服务**的相关文件                         |
+| **/sys**        | 系统目录，存放**系统硬件信息**的相关目录                     |
+| **/tmp**        | 存放用户和程序的==临时文件==，**所有用户对该目录都有读写权限  ** |
+
+| **/usr**         | 用于存放与系统用户直接有关的文件和目录，例如应用程序及支持它们的库文件。以下罗列了/usr中部分重要的目录。 |
+| ---------------- | ------------------------------------------------------------ |
+| /usr/X11R6：     | X  Window系统                                                |
+| /usr/bin         | 用户和管理员的标准命令                                       |
+| /usr/include     | c/c++等各种开发语言环境的标准include文件                     |
+| /usr/lib         | 应用程序及程序包的连接库                                     |
+| /usr/local       | 系统管理员安装的应用程序目录                                 |
+| /usr/local/share | 系统管理员安装的共享文件                                     |
+| /usr/sbin        | 用户和管理员的标准命令                                       |
+| /usr/share       | 存放使用手册等共享文件的目录                                 |
+| /usr/share/dict  | 存放词表的目录                                               |
+| /usr/share/man   | 系统使用手册                                                 |
+| /usr/share/misc  | 一般数据                                                     |
+| /usr/share/sgml  | SGML数据                                                     |
+| /usr/share/xml   | XML数据                                                      |
+| **/var**         | 通常用于存放长度可变的文件，例如日志文件和打印机文件。以下罗列了/var其中部分重要的目录。 |
+| /var/cache       | 应用程序缓存目录                                             |
+| /var/crash       | 系统错误信息                                                 |
+| /var/games       | 游戏数据                                                     |
+| /var/lib         | 各种状态数据                                                 |
+| /var/lock        | 文件锁定纪录                                                 |
+| /var/log         | 日志记录                                                     |
+| /var/mail        | 电子邮件                                                     |
+| /var/opt         | /opt目录的变量数据                                           |
+| /var/run         | 进程的标示数据                                               |
+| /var/spool       | 存放电子邮件，打印任务等的队列目录。                         |
+| /var/tmp         | 临时文件目录                                                 |
+
+#### 文件路径
+
+**绝对路径**：指文件在文件系统中完整的准确位置。以==根目录为起点==，以目标文件或目录为终点。
+
+>  例如“/usr/games/gnect”就是绝对路径
+
+**相对路径**：指**相对**于用户**当前位置**的一个文件或目录的位置。
+
+>  例如，用户处在usr目录中时，只需要“games/gnect”就可确定这个文件
+
+#### 比较linux和windows
+
+|                      | **Linux文件系统**                                            | **Windows文件系统**                                          |
+| -------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **文件格式**         | 使用的主要文件格式有：EXT2、EXT3、 RerserFS、ISO9660、vfat等 | 使用的主要文件格式有：FAT16、  FAT32、NTFS等                 |
+| **存储结构**         | 逻辑结构犹如一颗倒置的树。将每个硬件设备视为一个文件，置于树形的文件系统层次结构中。因此，Linux系统的某一个文件就可能占有一块硬盘，甚至是远端设备，用户访问时非常自然 | 逻辑结构犹如多颗树（森林）。将硬盘划分为若个分区，与存储设备一起（例如CD-ROM、USB存储器等），使用驱动器盘符标识，例如A：代表软驱、C：代表硬盘中的第一个分区等。 |
+| **与硬盘分区的关系** | 分区在目录结构中                                             | 目录结构在分区中                                             |
+| **文件命名**         | Linux文件系统中严格区分大小写，MyFile.txt与myfile.txt指不同的文件。区分文件类型不依赖于文件后缀，可以使用程序file命令判断文件类型。 | windows文件系统中不区分大小写，MyFile.txt与myfile.txt是指同一个文件。使用文件后缀来标识文件类型。例如使用“.txt”表示文本文件。 |
+| **路径分隔符**       | Linux使用斜杠“/”分隔目录名，例如“/home/usr/share”，其中第一个斜杠是根目录（/），绝对路径都是以根目录作为起点 | Windows使用反斜杠“\”分隔目录名，例如“C:\program \username”，绝对路径都是以驱动器盘符作为起点 |
+| **文件与目录权限**   | Linux最初的定位是多用户的操作系统，因而有完善文件授权机制，所有的文件和目录都有相应的访问权限 | Windows最初的定位是单用户的操作系统，内建系统时没有文件权限的概念，后期的Windows逐渐增加了这方面的功能 |
+
+---
+
+
+
+## 文件系统的相关命令
+
+```shell
+#复习一些在c语言基础课中用到的命令
+kidea@ubuntu:~$ pwd #查看当前所处的文件夹的绝对路径
+kidea@ubuntu:~$ ls  #查看当前文件夹的列表文件或文件夹
+kidea@ubuntu:~$ cd  #移动到目标文件夹
+kidea@ubuntu:~$ touch   #新建文件
+kidea@ubuntu:~$ cp   #复制文件
+kidea@ubuntu:~$ mv   #移动文件
+kidea@ubuntu:~$ rm   #删除文件
+kidea@ubuntu:~$ cat  
+kidea@ubuntu:~$ head
+kidea@ubuntu:~$ tail
+kidea@ubuntu:~$ mkdir   #新建文件夹
+kidea@ubuntu:~$ rmdir   #删除文件夹
+```
+
+
+
+---
+
