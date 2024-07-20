@@ -1338,3 +1338,194 @@ kidea@ubuntu:~$ tar  -xvzf  myExamples.tar.gz
 
 
 # day12 linux shell脚本编程
+
+> 编程语言的类型
+>
+> 编译型语言，c语言
+>
+> 解释型语言，shell脚本语言（**shell命令的有序集合**）
+
+```shell
+#基本步骤
+kidea@ubuntu:~$ vim test.sh
+kidea@ubuntu:~$ chmod 740 test.sh #提高文件执行权限
+kidea@ubuntu:~$ ls -l #查看权限
+kidea@ubuntu:~$ ./test.sh  #shell脚本可以直接执行
+kidea@ubuntu:~$ besh test.sh #执行bash shell脚本
+```
+
+- shell脚本语言没有数据类型，所有数据看作字符串
+
+##  **shell变量输入输出**
+
+```shell
+VAR = 666
+echo $VAR #表示取变量VAR的值在标准输出上打印出来
+```
+
+```shell
+read  var #从标准输入接受数据到变量val
+echo $var #在标准输出打印标准输入的数据
+```
+
+## 整数四则运算-expr
+
+算术运算命令expr主要用于进行简单的整数运算，包括加`+`减`-`乘`\*`、整除`/`和求模(取余)`%`等操作
+
+```shell
+  $ expr  12  +  5  \*  3 #反斜杠转义字符*号的含义
+
+  27
+  
+  $ expr  3  -  8  /  2
+  -1
+
+  $ num=9
+  $ sum=`expr  $num  \*  6 ` #反撇号表示引用命令的运行结果
+
+  $ echo  $sum
+```
+
+
+
+shell脚本编程这里还是后面看csdn大佬的笔记学吧，华清老师讲的太水了
+
+
+
+
+
+
+
+# day13 linux C语言高级编程
+
+## GCC编译器
+
+```html
+http://gcc.gnu.org
+```
+
+- 全称为GNU CC ，GNU项目中符合ANSI C标准的编译系统  
+
+- 编译如C、C++、Object C、Java、Fortran、Pascal、Modula-3和Ada等多种语言
+
+- GCC是可以在多种硬体平台上编译出可执行程序的超级编译器，其执行效率与一般的编译器相比平均效率要高20%~30%
+
+- 一个交叉平台编译器 ，适合在嵌入式领域的开发编译 
+
+### gcc支持的拓展名 
+
+| 拓展名      | 拓展名解释                |
+| ----------- | ------------------------- |
+| .c          | C原始程序                 |
+| .C/.cc/.cxx | C++原始程序               |
+| .m          | Objective-C原始程序       |
+| .i          | 已经过预处理的C原始程序   |
+| .ii         | 已经过预处理的C++原始程序 |
+| .s/.S       | 汇编语言原始程序          |
+| .h          | 预处理文件(头文件)        |
+| .o          | 目标文件                  |
+| .a/.so      | 编译后的库文件            |
+
+### 编译器的主要组件
+
+- 分析器：分析器将源语言程序代码==转换为汇编==语言。因为要从一种格式转换为另一种格式（C到汇编），所以分析器需要知道目标机器的汇编语言。
+
+- 汇编器：汇编器将汇编语言代码转换为CPU可以执行字节码。==转换为二进制==。
+
+- 链接器：链接器将把汇编器生成的独立文件链接成一个==完整的可执行文件==（应用程序）。链接器需要知道这种目标格式以便工作。
+
+- 标准C库：==核心的C函数==都有一个主要的C库来提供。如果在应用程序中用到了C库中的函数，这个库就会通过链接器和源代码连接来生成最终的可执行程序。
+
+### GCC的基本命令
+
+```shell
+kidea@ubuntu:~$ gcc [options] [filenames] 
+
+-c，只编译，不连接成为可执行文件，编译器只是由输入的.c等源代码文件生成.o为后缀的目标文件，通常用于编译不包含主程序的子程序文件。 
+-o output_filename，确定输出文件的名称为output_filename，同时这个名称不能和源文件同名。如果不给出这个选项，gcc就给出预设的可执行文件a.out。
+-g，产生符号调试工具(GNU的gdb)所必要的符号资讯，要想对源代码进行调试，我们就必须加入这个选项。 
+-O，对程序进行优化编译、连接，采用这个选项，整个源代码会在编译、连接过程中进行优化处理，这样产生的可执行文件的执行效率可以提高，但是，编译、连接的速度就相应地要慢一些。
+-O2，比-O更好的优化编译、连接，当然整个编译、连接过程会更慢。
+-I  dirname，将dirname所指出的目录加入到程序头文件目录列表中，是在预编译过程中使用的参数。
+-L  dirname，将dirname所指出的目录加入到程序函数档案库文件的目录列表中，是在链接过程中使用的参数。
+```
+
+### GCC的报错类型
+
+#### 第一类∶C语法错误 
+
+- 错误信息∶文件source.c中第n行有语法错误(syntexerrror)。
+- 有些情况下，一个很简单的语法错误，gcc会给出一大堆错误，我们最主要的是要保持清醒的头脑，不要被其吓倒，必要的时候再参考一下C语言的基本教材。 
+
+#### 第二类∶头文件错误 
+
+- 错误信息∶找不到头文件head.h(Can not find include filehead.h)。
+- 这类错误是源代码文件中的包含头文件有问题，可能的原因有头文件名错误、指定的头文件所在目录名错误等，也可能是错误使用双引号或尖括号。
+
+#### 第三类∶档案库错误 
+
+- 错误信息∶链接程序找不到所需的函数库（ld: -lm: No such file or directory )。
+- 这类错误是与目标文件相连接的函数库有错误，可能的原因是函数库名错误、指定的函数库所在目录名称错误等
+- 检查的方法是使用find命令在可能的目录中寻找相应的函数库名，确定档案库及目录的名称并修改程序中及编译选项中的名称。
+
+#### 第四类∶未定义符号 
+
+- 错误信息∶有未定义的符号(Undefined symbol)。
+- 这类错误是在连接过程中出现的，可能有两种原因
+- 一是使用者自己定义的函数或者全局变量所在源代码文件，没有被编译、连接，或者干脆还没有定义，这需要使用者根据实际情况修改源程序，给出全局变量或者函数的定义体；
+- 二是未定义的符号是一个标准的库函数，在源程序中使用了该库函数，而连接过程中还没有给定相应的函数库的名称，或者是该档案库的目录名称有问题
+- 这时需要使用档案库维护命令ar检查我们需要的库函数到底位于哪一个函数库中，确定之后，修改gcc连接选项中的-l和-L项。 
+
+### GCC的编译流程
+
+1.预处理(Pre-Processing)
+
+2.编译(Compiling)
+
+3.汇编(Assembling)
+
+4.链接(Linking)
+
+<img src="../assets/Linux-C学习笔记/image-20240720101923833.png" alt="image-20240720101923833" style="zoom:50%;" />
+
+## Gdb调试器
+
+```shell
+# 首先使用gcc对test.c进行编译，注意一定要加上选项‘-g’ 
+kidea@ubuntu:~$ gcc -g test.c -o test 
+kidea@ubuntu:~$ gdb test 
+GNU gdb Red Hat Linux (6.3.0.0-1.21rh)
+Copyright 2004 Free Software Foundation, Inc.
+GDB is free software, covered by the GNU General Public License, and you are
+welcome to change it and/or distribute copies of it under certain conditions.
+Type "show copying" to see the conditions.
+There is absolutely no warranty for GDB.  Type "show warranty" for details.
+This GDB was configured as "i386-redhat-linux-gnu"...Using host libthread_db library "/lib/libthread_db.so.1".
+(gdb)  # 在这里输入调试指令
+
+(gdb) l  #查看文件
+
+(gdb) b 6  #设置断点（这里表示从第6行代码开始执行）
+
+(gdb) info b  #查看断点情况 
+
+(gdb) r  #运行代码 
+
+(gdb) p n  #查看变量值
+
+(gdb) n  #单步运行 
+(gdb) s  #单步运行
+
+(gdb) c  #恢复程序正常运行，直到程序结束
+
+(gdb) help [command]  #帮助 
+
+```
+
+- 在gcc编译时选项一定要有   -g  否则后面无法调试
+
+- 只有在代码处于“运行”或“暂停”状态时才能查看变量值。
+
+- 设置断点后程序在指定行之前停止 
+
+![image-20240720145910976](../assets/Linux-C学习笔记/image-20240720145910976.png)
